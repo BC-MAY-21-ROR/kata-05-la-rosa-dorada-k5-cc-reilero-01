@@ -54,22 +54,33 @@
 # end
 
 class GildedRose
-  :attr_accessor items
+  attr_accessor :items
 
   def initilize(items)
     @items = items
   end
 
   def update_quality
-    
-    @items each do |item|
+    @items.each do |item|
       if item.name
         if item.quality
+          conjured
+        end
       end
     end
-
   end
 
+  def conjured
+    item.quality = item.quality - 2
+  end
+
+  def insert_conjured
+    @i = Item.new
+    class << @i
+      attr_accessor :conjured
+    end
+    @i.conjured = true
+  end
 end
 
 class Item
@@ -85,3 +96,5 @@ class Item
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 end
+
+GildedRose.new
