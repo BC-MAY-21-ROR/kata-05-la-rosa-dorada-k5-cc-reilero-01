@@ -58,6 +58,30 @@ class GildedRose
 
   def initilize(items)
     @items = items
+    @special_items = ["Aged Brie", "Sulfuras", "Backstage passes", "Conjured"]
+  end
+
+  def legendary_items
+      @items.sell_in = nil
+      @items.quality = 80
+  end
+
+  def special_aged_brie
+    @items.sell_in - 1
+    if @items.quality < 50 ? @items.quality + 1 : @items.quality
+  end
+
+  def special_backstage
+    @items.sell_in - 1
+    if @items.sell_in <= 10
+      @items.quality += 2
+    elsif @items.sell_in <= 5
+      @items.sell_in += 3
+    elsif @items.sell_in <= 0
+      @items.sell_in = 0
+    else
+      @items.sell_in +=1
+    end
   end
 
   def update_quality
@@ -69,19 +93,6 @@ class GildedRose
       end
     end
   end
-
-  def conjured
-    item.quality = item.quality - 2
-  end
-
-  def insert_conjured
-    @i = Item.new
-    class << @i
-      attr_accessor :conjured
-    end
-    @i.conjured = true
-  end
-end
 
 class Item
   attr_accessor :name, :sell_in, :quality
