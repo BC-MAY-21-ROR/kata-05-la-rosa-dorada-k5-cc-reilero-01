@@ -1,98 +1,74 @@
-# class GildedRose
-
-#   def initialize(items)
-#     @items = items
-#   end
-
-#   def update_quality()
-#     @items.each do |item|
-#       if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert"
-#         if item.quality > 0
-#           if item.name != "Sulfuras, Hand of Ragnaros"
-#             item.quality = item.quality - 1
-#           end
-#         end
-#       else
-#         if item.quality < 50
-#           item.quality = item.quality + 1
-#           if item.name == "Backstage passes to a TAFKAL80ETC concert"
-#             if item.sell_in < 11
-#               if item.quality < 50
-#                 item.quality = item.quality + 1
-#               end
-#             end
-#             if item.sell_in < 6
-#               if item.quality < 50
-#                 item.quality = item.quality + 1
-#               end
-#             end
-#           end
-#         end
-#       end
-#       if item.name != "Sulfuras, Hand of Ragnaros"
-#         item.sell_in = item.sell_in - 1
-#       end
-#       if item.sell_in < 0
-#         if item.name != "Aged Brie"
-#           if item.name != "Backstage passes to a TAFKAL80ETC concert"
-#             if item.quality > 0
-#               if item.name != "Sulfuras, Hand of Ragnaros"
-#                 item.quality = item.quality - 1
-#               end
-#             end
-#           else
-#             item.quality = item.quality - item.quality
-#           end
-#         else
-#           if item.quality < 50
-#             item.quality = item.quality + 1
-#           end
-#         end
-#       end
-#     end
-#   end
-# end
-
 class GildedRose
-  attr_accessor :items
+  attr_accessor :items, :special_items
 
-  def initilize(items)
+  def initialize(items)
     @items = items
-    @special_items = ["Aged Brie", "Sulfuras", "Backstage passes", "Conjured"]
+    @special_items = ['Aged Brie', 'Sulfuras', 'Backstage passes', 'Conjured']
   end
 
-  def legendary_items
-      @items.sell_in = nil
-      @items.quality = 80
+  def legendary_items(item)
+    item.sell_in = nil
+    item.quality = 80
   end
 
-  def special_aged_brie
-    @items.sell_in - 1
-    if @items.quality < 50 ? @items.quality + 1 : @items.quality
+  def special_aged_brie(item)
+    item.sell_in - 1
+    if item.quality < 50 ? item.quality + 1 : item.quality
+    end
   end
-
-  def special_backstage
-    @items.sell_in - 1
-    if @items.sell_in <= 10
-      @items.quality += 2
-    elsif @items.sell_in <= 5
-      @items.sell_in += 3
-    elsif @items.sell_in <= 0
-      @items.sell_in = 0
+  def special_backstage(item)
+    item.sell_in - 1
+    if item.sell_in <= 10
+      item.quality += 2
+    elsif item.sell_in <= 5
+      item.sell_in += 3
+    elsif item.sell_in <= 0
+      item.sell_in = 0
     else
-      @items.sell_in +=1
+      item.sell_in += 1
+    end
+  end
+
+  def conjured_items(item)
+    item.sell_in - 1
+    item.quality - 2
+  end
+
+  def normal_items(item)
+    item.sell_in - 1
+    item.quality - 1
+  end
+
+  def special?(item)
+    @items.each_with_index do |items, i|
+      special_items = @special_items.include?(item.name)
+      if special_items == true ? i : false
+      end 
     end
   end
 
   def update_quality
     @items.each do |item|
-      if item.name
-        if item.quality
-          conjured
-        end
+      if special?(item) == false
+        normal_items(item)
+      elsif special?(item) == 0
+        special_aged_brie(item)
+      elsif special?(item) == 1
+        legendary_items(item)
+      elsif special?(item) == 2
+        special_backstage(item)
+      elsif special?(item) == 3
+        conjured_items(item)
       end
     end
   end
+
+  def printer
+    @items.each do |item|
+      puts item.to_s
+    end
+  end
+end
 
 class Item
   attr_accessor :name, :sell_in, :quality
@@ -103,9 +79,13 @@ class Item
     @quality = quality
   end
 
-  def to_s()
+  def to_s
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 end
 
-GildedRose.new
+gild_rose = GildedRose.new([Item.new('Sulfuras', 60, 80), Item.new('Juan', 15, 15), Item.new('Backstage passes', 5, 8),
+                            Item.new('Aged Brie', 3, 50), Item.new('Conjured pedro', 10, 10)])
+gild_rose.printer
+gild_rose.update_quality
+gild_rose.printer
