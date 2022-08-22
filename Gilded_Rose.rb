@@ -12,44 +12,42 @@ class GildedRose
   end
 
   def special_aged_brie(item)
-    item.sell_in - 1
-    if item.quality < 50 ? item.quality + 1 : item.quality
-    end
+    item.sell_in -= 1
   end
+
   def special_backstage(item)
-    item.sell_in - 1
-    if item.sell_in <= 10
-      item.quality += 2
+    item.sell_in -= 1
+    if item.sell_in <= 0
+      item.quality = 0
     elsif item.sell_in <= 5
-      item.sell_in += 3
-    elsif item.sell_in <= 0
-      item.sell_in = 0
+      item.quality += 3
+    elsif item.sell_in <= 10
+      item.quality += 2
     else
-      item.sell_in += 1
+      item.quality += 1
     end
   end
 
   def conjured_items(item)
-    item.sell_in - 1
-    item.quality - 2
+    item.sell_in -= 1
+    item.quality -= 2
   end
 
   def normal_items(item)
-    item.sell_in - 1
-    item.quality - 1
+    item.sell_in -= 1
+    item.quality -= 1
   end
 
   def special?(item)
-    @items.each_with_index do |items, i|
-      special_items = @special_items.include?(item.name)
-      if special_items == true ? i : false
-      end 
+    @special_items.each_with_index do |items, i|
+      special_items = item.name.include?(items)
+      return i if special_items == true
     end
   end
 
   def update_quality
     @items.each do |item|
-      if special?(item) == false
+      if special?(item) != 0 && special?(item) != 1 && special?(item) != 2 && special?(item) != 3
         normal_items(item)
       elsif special?(item) == 0
         special_aged_brie(item)
