@@ -13,6 +13,7 @@ class GildedRose
 
   def special_aged_brie(item)
     item.sell_in -= 1
+    item.quality += 1 if item.quality < 50
   end
 
   def special_backstage(item)
