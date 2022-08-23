@@ -51,13 +51,14 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      if special?(item) == 0
+      case special?(item)
+      when 0
         special_aged_brie(item)
-      elsif special?(item) == 1
+      when 1
         legendary_items(item)
-      elsif special?(item) == 2
+      when 2
         special_backstage(item)
-      elsif special?(item) == 3
+      when 3
         conjured_items(item)
       else
         normal_items(item)
