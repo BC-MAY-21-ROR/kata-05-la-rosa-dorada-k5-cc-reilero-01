@@ -1,5 +1,6 @@
+#GildedRose class
 class GildedRose
-  attr_accessor :items, :special_items
+  attr_reader :items, :special_items
 
   def initialize(items)
     @items = items
@@ -13,7 +14,9 @@ class GildedRose
 
   def special_aged_brie(item)
     item.sell_in -= 1
-    item.quality += 1 if item.quality < 50
+    if item.quality < 50
+      item.quality += 1
+    end
   end
 
   def special_backstage(item)
@@ -40,17 +43,15 @@ class GildedRose
   end
 
   def special?(item)
-    @special_items.each_with_index do |items, i|
+    @special_items.each_with_index do |items, index|
       special_items = item.name.include?(items)
-      return i if special_items == true
+      return index if special_items == true
     end
   end
 
   def update_quality
     @items.each do |item|
-      if special?(item) != 0 && special?(item) != 1 && special?(item) != 2 && special?(item) != 3
-        normal_items(item)
-      elsif special?(item) == 0
+      if special?(item) == 0
         special_aged_brie(item)
       elsif special?(item) == 1
         legendary_items(item)
@@ -58,6 +59,8 @@ class GildedRose
         special_backstage(item)
       elsif special?(item) == 3
         conjured_items(item)
+      else
+        normal_items(item)
       end
     end
   end
@@ -69,6 +72,7 @@ class GildedRose
   end
 end
 
+#Item class
 class Item
   attr_accessor :name, :sell_in, :quality
 
